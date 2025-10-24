@@ -13,7 +13,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Section */}
-      <section className="bg-[#0d1b2a] text-white py-16">
+      <section className="bg-[#1a1a1a] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-5xl text-[#f04230] mb-4">Contact & À propos</h1>
           <p className="text-xl text-gray-300 max-w-3xl">
@@ -30,7 +30,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
             <div>
               <h2 className="text-4xl text-[#0A1128] mb-6">Notre Vision</h2>
               <p className="text-gray-700 mb-4">
-                Depuis sa création, <span className="text-[#C9A961]">Djoudi Promotion</span> s'est imposée
+                Depuis sa création, <span className="text-[#f04230]">Djoudi Promotion</span> s'est imposée
                 comme un acteur majeur de la promotion immobilière haut de gamme en Algérie. Notre mission
                 est de créer des espaces de vie exceptionnels qui allient élégance, confort et innovation.
               </p>
@@ -47,30 +47,30 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
               </p>
             </div>
             <div className="grid grid-cols-2 gap-6">
-              <Card className="text-center p-6 bg-[#C9A961]/10 border-[#C9A961]">
+              <Card className="text-center p-6 bg-[#f04230]/10 border-[#f04230]">
                 <CardContent className="pt-6">
-                  <Building2 className="text-[#C9A961] mx-auto mb-3" size={40} />
+                  <Building2 className="text-[#f04230] mx-auto mb-3" size={40} />
                   <div className="text-3xl text-[#0A1128] mb-2">6+</div>
                   <p className="text-gray-600">Sites immobiliers</p>
                 </CardContent>
               </Card>
-              <Card className="text-center p-6 bg-[#C9A961]/10 border-[#C9A961]">
+              <Card className="text-center p-6 bg-[#f04230]/10 border-[#f04230]">
                 <CardContent className="pt-6">
-                  <Users className="text-[#C9A961] mx-auto mb-3" size={40} />
+                  <Users className="text-[#f04230] mx-auto mb-3" size={40} />
                   <div className="text-3xl text-[#0A1128] mb-2">1000+</div>
                   <p className="text-gray-600">Familles satisfaites</p>
                 </CardContent>
               </Card>
-              <Card className="text-center p-6 bg-[#C9A961]/10 border-[#C9A961]">
+              <Card className="text-center p-6 bg-[#f04230]/10 border-[#f04230]">
                 <CardContent className="pt-6">
-                  <Award className="text-[#C9A961] mx-auto mb-3" size={40} />
+                  <Award className="text-[#f04230] mx-auto mb-3" size={40} />
                   <div className="text-3xl text-[#0A1128] mb-2">15+</div>
                   <p className="text-gray-600">Années d'expérience</p>
                 </CardContent>
               </Card>
-              <Card className="text-center p-6 bg-[#C9A961]/10 border-[#C9A961]">
+              <Card className="text-center p-6 bg-[#f04230]/10 border-[#f04230]">
                 <CardContent className="pt-6">
-                  <Target className="text-[#C9A961] mx-auto mb-3" size={40} />
+                  <Target className="text-[#f04230] mx-auto mb-3" size={40} />
                   <div className="text-3xl text-[#0A1128] mb-2">100%</div>
                   <p className="text-gray-600">Engagement qualité</p>
                 </CardContent>
@@ -93,8 +93,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <Card className="text-center p-6 hover:shadow-lg transition-shadow">
               <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-[#C9A961]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Award className="text-[#C9A961]" size={32} />
+                <div className="w-16 h-16 bg-[#f04230]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Award className="text-[#f04230]" size={32} />
                 </div>
                 <h3 className="text-xl text-[#0A1128] mb-3">Excellence</h3>
                 <p className="text-gray-600">
@@ -105,8 +105,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
 
             <Card className="text-center p-6 hover:shadow-lg transition-shadow">
               <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-[#C9A961]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Target className="text-[#C9A961]" size={32} />
+                <div className="w-16 h-16 bg-[#f04230]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Target className="text-[#f04230]" size={32} />
                 </div>
                 <h3 className="text-xl text-[#0A1128] mb-3">Innovation</h3>
                 <p className="text-gray-600">Solutions modernes et créatives pour chaque projet</p>
@@ -115,8 +115,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
 
             <Card className="text-center p-6 hover:shadow-lg transition-shadow">
               <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-[#C9A961]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="text-[#C9A961]" size={32} />
+                <div className="w-16 h-16 bg-[#f04230]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="text-[#f04230]" size={32} />
                 </div>
                 <h3 className="text-xl text-[#0A1128] mb-3">Confiance</h3>
                 <p className="text-gray-600">
@@ -127,8 +127,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
 
             <Card className="text-center p-6 hover:shadow-lg transition-shadow">
               <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-[#C9A961]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Building2 className="text-[#C9A961]" size={32} />
+                <div className="w-16 h-16 bg-[#f04230]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Building2 className="text-[#f04230]" size={32} />
                 </div>
                 <h3 className="text-xl text-[#0A1128] mb-3">Qualité</h3>
                 <p className="text-gray-600">Matériaux premium et finitions impeccables</p>
@@ -199,7 +199,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                       className="mt-2"
                     />
                   </div>
-                  <Button className="w-full bg-[#C9A961] text-[#0A1128] hover:bg-[#C9A961]/90">
+                  <Button className="w-full bg-[#f04230] text-white hover:bg-[#f04230]/90">
                     Envoyer le message
                   </Button>
                 </form>
@@ -211,8 +211,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-[#C9A961]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <MapPin className="text-[#C9A961]" size={24} />
+                    <div className="w-12 h-12 bg-[#f04230]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <MapPin className="text-[#f04230]" size={24} />
                     </div>
                     <div>
                       <h4 className="text-[#0A1128] mb-2">Adresse</h4>
@@ -229,8 +229,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-[#C9A961]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Phone className="text-[#C9A961]" size={24} />
+                    <div className="w-12 h-12 bg-[#f04230]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Phone className="text-[#f04230]" size={24} />
                     </div>
                     <div>
                       <h4 className="text-[#0A1128] mb-2">Téléphone</h4>
@@ -244,8 +244,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-[#C9A961]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Mail className="text-[#C9A961]" size={24} />
+                    <div className="w-12 h-12 bg-[#f04230]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Mail className="text-[#f04230]" size={24} />
                     </div>
                     <div>
                       <h4 className="text-[#0A1128] mb-2">Email</h4>
@@ -259,8 +259,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-[#C9A961]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Clock className="text-[#C9A961]" size={24} />
+                    <div className="w-12 h-12 bg-[#f04230]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Clock className="text-[#f04230]" size={24} />
                     </div>
                     <div>
                       <h4 className="text-[#0A1128] mb-2">Horaires</h4>
@@ -291,15 +291,15 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-[#0A1128] text-white">
+      <section className="py-16 bg-[#1a1a1a] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl text-[#C9A961] mb-6">Prêt à découvrir nos projets ?</h2>
+          <h2 className="text-4xl text-[#f04230] mb-6">Prêt à découvrir nos projets ?</h2>
           <p className="text-xl text-gray-300 mb-8">
             Explorez nos résidences exceptionnelles et trouvez le logement de vos rêves
           </p>
           <Button
             onClick={() => onNavigate('sites')}
-            className="bg-[#C9A961] text-[#0A1128] hover:bg-[#C9A961]/90 px-8 py-6"
+            className="bg-[#f04230] text-white hover:bg-[#f04230]/90 px-8 py-6"
           >
             Découvrir nos sites
           </Button>
