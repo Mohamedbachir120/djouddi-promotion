@@ -11,9 +11,9 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
 
   const menuItems = [
     { id: 'home', label: 'Accueil' },
-    { id: 'sites', label: 'Nos Sites' },
-    { id: 'activities', label: 'Activités & Loisirs' },
-    { id: 'contact', label: 'Contact & À propos' },
+    { id: 'sites', label: 'Nos Résidences' },
+    { id: 'activities', label: 'Commodités' },
+    { id: 'contact', label: 'Contact' },
   ];
 
   return (
@@ -40,7 +40,7 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
                 className={`transition-colors hover:text-[#f04230] ${
-                  currentPage === item.id ? 'text-[#f04230]' : 'text-white'
+                  currentPage === item.id || (item.id === 'sites' && currentPage === 'site-detail') ? 'text-[#f04230]' : 'text-white'
                 }`}
               >
                 {item.label}
