@@ -1,84 +1,151 @@
-import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { Phone } from 'lucide-react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { company } from '../data/site';
+import { telHref } from './site/primitives';
 
 interface HeaderProps {
   currentPage: string;
   onNavigate: (page: string) => void;
 }
 
+const menuItems = [
+  { id: 'home', label: 'Accueil' },
+  { id: 'sites', label: 'Nos Résidences' },
+  { id: 'activities', label: 'Commodités' },
+  { id: 'contact', label: 'Contact' },
+];
+
 export function Header({ currentPage, onNavigate }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [solid, setSolid] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
 
-  const menuItems = [
-    { id: 'home', label: 'Accueil' },
-    { id: 'sites', label: 'Nos Résidences' },
-    { id: 'activities', label: 'Commodités' },
-    { id: 'contact', label: 'Contact' },
-  ];
+  // Transparent over the opening photograph, solid once the page scrolls;
+  // slides away while reading downwards and returns on the way back up.
+  useEffect(() => {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY;
+      setSolid(y > 24);
+      setHidden(y > 480 && y > lastY.current + 4);
+      if (Math.abs(y - lastY.current) > 4) lastY.current = y;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle('dp-lock', mobileMenuOpen);
+    if (!mobileMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMobileMenuOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mobileMenuOpen]);
+
+  const isCurrent = (id: string) => currentPage === id || (id === 'sites' && currentPage === 'site-detail');
+  const go = (id: string) => {
+    setMobileMenuOpen(false);
+    onNavigate(id);
+  };
 
   return (
-    <header className="bg-[#1a1a1a] text-white sticky top-0 z-50 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Logo */}
-          <button
-            onClick={() => onNavigate('home')}
-            className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
-          >
-            <div className="w-10 h-10 bg-[#f04230] rounded-lg flex items-center justify-center">
-              <span className="text-white">DP</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[#f04230]">Djoudi Promotion</span>
-            </div>
+    <>
+      <header
+        className={`dp-header ${solid || mobileMenuOpen ? 'is-solid' : ''} ${hidden && !mobileMenuOpen ? 'is-hidden' : ''}`}
+      >
+        <div className="dp-container dp-header__bar">
+          <button type="button" onClick={() => go('home')} className="dp-brand" aria-label="Djoudi Promotion – Accueil">
+            <span className="dp-brand__mark">DP</span>
+            <span className="dp-brand__name">Djoudi Promotion</span>
           </button>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className="dp-nav" aria-label="Navigation principale">
             {menuItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => onNavigate(item.id)}
-                className={`transition-colors hover:text-[#f04230] ${
-                  currentPage === item.id || (item.id === 'sites' && currentPage === 'site-detail') ? 'text-[#f04230]' : 'text-white'
-                }`}
+                type="button"
+                onClick={() => go(item.id)}
+                className="dp-nav__link"
+                aria-current={isCurrent(item.id) ? 'page' : undefined}
               >
                 {item.label}
               </button>
             ))}
           </nav>
 
-          {/* Mobile Menu Button */}
+          <div className="dp-header__actions">
+            <a href={telHref(company.phones[0])} className="dp-header__phone">
+              <Phone size={16} strokeWidth={1.5} />
+              {company.phones[0]}
+            </a>
+            <button type="button" className="dp-btn dp-btn--primary dp-btn--sm" onClick={() => go('contact')}>
+              Planifier une visite
+            </button>
+          </div>
+
           <button
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            type="button"
+            className="dp-burger"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="dp-menu"
+            aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            <span className="dp-burger__lines" aria-hidden="true">
+              <span />
+              <span />
+            </span>
           </button>
         </div>
+      </header>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <nav className="md:hidden pb-4 space-y-2">
-            {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  onNavigate(item.id);
-                  setMobileMenuOpen(false);
-                }}
-                className={`block w-full text-left py-2 px-4 rounded transition-colors ${
-                  currentPage === item.id
-                    ? 'bg-[#f04230] text-white'
-                    : 'hover:bg-[#f04230]/20'
-                }`}
-              >
-                {item.label}
-              </button>
+      <div id="dp-menu" className={`dp-menu ${mobileMenuOpen ? 'is-open' : ''}`} aria-hidden={!mobileMenuOpen}>
+        <nav className="dp-menu__list" aria-label="Menu">
+          {menuItems.map((item, i) => (
+            <button
+              key={item.id}
+              type="button"
+              className="dp-menu__link"
+              style={{ '--i': i } as CSSProperties}
+              onClick={() => go(item.id)}
+              aria-current={isCurrent(item.id) ? 'page' : undefined}
+              tabIndex={mobileMenuOpen ? 0 : -1}
+            >
+              <span className="dp-num">{String(i + 1).padStart(2, '0')}</span>
+              {item.label}
+            </button>
+          ))}
+        </nav>
+        <div className="dp-menu__foot">
+          <button
+            type="button"
+            className="dp-btn dp-btn--primary dp-btn--block"
+            onClick={() => go('contact')}
+            tabIndex={mobileMenuOpen ? 0 : -1}
+          >
+            Planifier une visite
+          </button>
+          <div style={{ display: 'grid', gap: 10 }}>
+            {company.phones.map((phone) => (
+              <a key={phone} href={telHref(phone)} tabIndex={mobileMenuOpen ? 0 : -1}>
+                {phone}
+              </a>
             ))}
-          </nav>
-        )}
+            <a href={`mailto:${company.email}`} tabIndex={mobileMenuOpen ? 0 : -1}>
+              {company.email}
+            </a>
+          </div>
+        </div>
       </div>
-    </header>
+    </>
   );
 }
