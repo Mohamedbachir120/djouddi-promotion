@@ -1,16 +1,17 @@
-import { ArrowRight, Award, Building2, Heart, MapPin, Shield, Sofa } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import { Button } from './ui/button';
-import { Card, CardContent } from './ui/card';
 import {
   aboutText,
+  company,
   investText,
   media,
+  partnerLabels,
   partnerParagraphs,
   residences,
-  typologyRange,
+  showApartment,
   whyText,
 } from '../data/site';
+import { ContactLines } from './ContactPage';
+import { ResidenceRow } from './site/ResidenceRow';
+import { Arrow, Gallery, Img, Media, delay, telHref } from './site/primitives';
 
 interface HomePageProps {
   onNavigate: (page: string, siteId?: string) => void;
@@ -18,23 +19,19 @@ interface HomePageProps {
 
 const features = [
   {
-    icon: Award,
     title: 'Haut standing',
     description: 'Des appartements haut standing conçus avec soin selon des normes internationales.',
   },
   {
-    icon: Building2,
     title: 'Durabilité',
     description: 'Un investissement sécurisé et pérenne, une valeur sûre pour construire un patrimoine solide.',
   },
   {
-    icon: Sofa,
     title: 'Confort',
     description:
       'Climatisation centralisée, isolation thermique et phonique, cuisine équipée et douche italienne.',
   },
   {
-    icon: Shield,
     title: 'Sécurité 24/7',
     description: 'Des résidences dans un environnement sécurisé et clôturé.',
   },
@@ -42,192 +39,269 @@ const features = [
 
 export function HomePage({ onNavigate }: HomePageProps) {
   return (
-    <div className="min-h-screen">
-      {/* Hero Banner */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <video
-          className="absolute inset-0 w-full h-full object-cover"
-          src={media.heroVideo}
-          poster={media.heroPoster}
-          autoPlay
-          muted
-          loop
-          playsInline
-          aria-hidden="true"
-        />
-        <div className="hero-holder-blur absolute inset-0 bg-gradient-to-r from-[#1a1a1a]/90 to-[#1a1a1a]/70" />
-        <div className="relative z-10 text-center text-white max-w-4xl px-4">
-          <div className="bg-black bg-opacity-75 rounded-3xl p-8 md:p-12 shadow-2xl border border-white border-opacity-10">
-            <h1 className="text-5xl md:text-6xl mb-6 text-white drop-shadow-lg">Djoudi Promotion</h1>
-            <p className="text-xl md:text-2xl mb-4 drop-shadow-lg">
-              Appartements haut standing. Durabilité, confort et standing inégalés.
-            </p>
-            <p className="text-xl md:text-2xl mb-8 drop-shadow-lg italic">
-              Une expérience de Vie Luxueuse
-            </p>
-            <Button
-              onClick={() => onNavigate('sites')}
-              className="bg-[#f04230] text-white hover:bg-[#f04230]/90 px-8 py-6"
-            >
-              Découvrir nos résidences
-              <ArrowRight className="ml-2" size={20} />
-            </Button>
-          </div>
+    <div>
+      {/* Hero */}
+      <section className="dp-hero" aria-labelledby="hero-title">
+        <div className="dp-hero__media">
+          <video
+            src={media.heroVideo}
+            poster={media.heroPoster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+          />
         </div>
+        <div className="dp-hero__shade" />
+
+        <div className="dp-container dp-hero__content">
+          <span className="dp-eyebrow dp-rise" style={delay(0.2)}>
+            Promotion immobilière haut standing · Alger
+          </span>
+          <h1 id="hero-title" className="dp-display dp-hero__title">
+            <span className="dp-mask">
+              <span style={delay(0.3)}>Djoudi</span>
+            </span>
+            <span className="dp-mask">
+              <span style={delay(0.42)}>Promotion</span>
+            </span>
+          </h1>
+          <div className="dp-hero__row">
+            <p className="dp-hero__tagline dp-rise" style={delay(0.7)}>
+              Appartements haut standing. Durabilité, confort et standing inégalés.
+              <em>Une expérience de Vie Luxueuse</em>
+            </p>
+            <div className="dp-hero__ctas dp-rise" style={delay(0.85)}>
+              <button type="button" className="dp-btn dp-btn--primary" onClick={() => onNavigate('sites')}>
+                Découvrir nos résidences
+                <Arrow />
+              </button>
+              <button type="button" className="dp-btn dp-btn--light" onClick={() => onNavigate('contact')}>
+                Planifier une visite
+              </button>
+            </div>
+          </div>
+          <span className="dp-hero__scroll dp-rise" style={delay(1.1)} aria-hidden="true">
+            <i />
+            Nos résidences
+          </span>
+        </div>
+
+        <nav className="dp-hero__index dp-rise" style={delay(1)} aria-label="Nos résidences">
+          <ol className="dp-container">
+            {residences.map((site, i) => (
+              <li key={site.id}>
+                <button type="button" onClick={() => onNavigate('site-detail', site.id)}>
+                  <span className="dp-num">{String(i + 1).padStart(2, '0')}</span>
+                  <strong>{site.name.replace('Résidence ', '')}</strong>
+                  <span className="dp-hero__loc">{site.location}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </nav>
       </section>
 
       {/* Qui sommes-nous */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="relative h-96 rounded-lg overflow-hidden shadow-2xl">
-              <ImageWithFallback
-                src={media.about}
-                alt="Résidence Lux, vue depuis un balcon sur la cour intérieure"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div>
-              <h2 className="text-4xl text-[#1a1a1a] mb-6">Qui sommes-nous ?</h2>
-              <p className="text-gray-700 text-lg">
-                <span className="text-[#f04230]">Djoudi Promotion</span> {aboutText}
-              </p>
-            </div>
+      <section className="dp-section" aria-labelledby="about-title">
+        <div className="dp-container dp-about">
+          <div className="dp-about__text">
+            <span className="dp-eyebrow" data-reveal id="about-title">
+              Qui sommes-nous ?
+            </span>
+            <p className="dp-about__statement dp-mt-m" data-reveal style={delay(0.08)}>
+              <strong>Djoudi Promotion</strong> {aboutText}.
+            </p>
+            <dl className="dp-facts" data-reveal style={delay(0.16)}>
+              <div>
+                <dt>Résidences</dt>
+                <dd>{residences.length} à Alger</dd>
+              </div>
+              <div>
+                <dt>Appartements</dt>
+                <dd>F2 à F6</dd>
+              </div>
+            </dl>
+          </div>
+          <div className="dp-about__media">
+            <Media
+              src={media.about}
+              alt="Résidence Lux, vue depuis un balcon sur la cour intérieure"
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              className="dp-about__img-main"
+            />
+            <Media
+              src="/images/lux/lux-phase3-courtyard-img158.jpg"
+              alt="Résidence Lux, la cour centrale aménagée"
+              sizes="25vw"
+              className="dp-about__img-sub"
+              delay={0.25}
+            />
           </div>
         </div>
       </section>
 
-      {/* Nos Résidences */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl text-[#1a1a1a] mb-4">Nos Projets</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Découvrez nos résidences haut standing à Alger
+      {/* Nos Projets */}
+      <section className="dp-section dp-section--stone" aria-labelledby="projects-title" style={{ paddingTop: 'clamp(88px, 10vw, 144px)' }}>
+        <div className="dp-container">
+          <div className="dp-head dp-head--split">
+            <div>
+              <span className="dp-eyebrow" data-reveal>
+                Nos Projets
+              </span>
+              <h2 id="projects-title" className="dp-h1 dp-head__title" data-reveal style={delay(0.08)}>
+                Quatre résidences haut standing à Alger
+              </h2>
+            </div>
+            <p className="dp-body" data-reveal style={delay(0.16)}>
+              Découvrez nos résidences haut standing à Dely Brahim, Chéraga, Beb Ezzouar et Draria.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {residences.map((site) => (
-              <Card
-                key={site.id}
-                className="overflow-hidden hover:shadow-2xl transition-shadow duration-300 border-2 border-transparent hover:border-[#f04230] cursor-pointer group"
-                onClick={() => onNavigate('site-detail', site.id)}
-              >
-                <div className="relative h-64 overflow-hidden">
-                  <ImageWithFallback
-                    src={site.cover}
-                    alt={site.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  {site.status && (
-                    <div className="absolute top-4 right-4 bg-[#f04230] text-white px-3 py-1 rounded-full">
-                      {site.status}
-                    </div>
-                  )}
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-2xl text-[#1a1a1a] mb-2">{site.name}</h3>
-                  <div className="flex items-center text-gray-600 mb-4">
-                    <MapPin size={16} className="mr-2 text-[#f04230]" />
-                    {site.location}
-                  </div>
-                  <p className="text-gray-600 mb-4 line-clamp-2">{site.summary}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">{typologyRange(site)}</span>
-                    <Button
-                      variant="ghost"
-                      className="text-[#f04230] hover:text-[#1a1a1a] hover:bg-[#f04230]/10"
-                    >
-                      Découvrir
-                      <ArrowRight size={16} className="ml-2" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+          <div className="dp-residences">
+            {residences.map((site, index) => (
+              <ResidenceRow key={site.id} site={site} index={index} onNavigate={onNavigate} />
             ))}
           </div>
 
-          <div className="text-center mt-12">
-            <Button
-              onClick={() => onNavigate('sites')}
-              variant="outline"
-              className="border-[#f04230] text-[#f04230] hover:bg-[#f04230] hover:text-white"
-            >
+          <div className="dp-mt-l" style={{ marginTop: 'clamp(72px, 9vw, 128px)', textAlign: 'center' }} data-reveal>
+            <button type="button" className="dp-btn dp-btn--dark" onClick={() => onNavigate('sites')}>
               Voir toutes nos résidences
-            </Button>
+              <Arrow />
+            </button>
           </div>
         </div>
       </section>
 
       {/* Pourquoi Djoudi Promotion */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl text-[#1a1a1a] mb-4">Pourquoi Djoudi Promotion ?</h2>
-            <p className="text-gray-600 max-w-3xl mx-auto">
-              Chez <span className="text-[#f04230]">Djoudi Promotion</span>, {whyText}
+      <section className="dp-section" aria-labelledby="why-title">
+        <div className="dp-container dp-split">
+          <div className="dp-split__aside">
+            <span className="dp-eyebrow" data-reveal>
+              Nos engagements
+            </span>
+            <h2 id="why-title" className="dp-h2 dp-mt-m" data-reveal style={delay(0.08)}>
+              Pourquoi Djoudi Promotion ?
+            </h2>
+            <p className="dp-body dp-mt-m dp-maxw-prose" data-reveal style={delay(0.16)}>
+              Chez <span className="dp-accent">Djoudi Promotion</span>, {whyText}
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <ol className="dp-split__main dp-list">
             {features.map((feature, index) => (
-              <Card key={index} className="text-center p-6 hover:shadow-lg transition-shadow">
-                <CardContent className="pt-6">
-                  <div className="w-16 h-16 bg-[#f04230]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="text-[#f04230]" size={32} />
-                  </div>
-                  <h3 className="text-xl text-[#1a1a1a] mb-3">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
-                </CardContent>
-              </Card>
+              <li key={feature.title} className="dp-list__item" data-reveal style={delay(index * 0.06)}>
+                <span className="dp-num">{String(index + 1).padStart(2, '0')}</span>
+                <h3>{feature.title}</h3>
+                <p className="dp-body">{feature.description}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* Appartement témoin */}
+      <section className="dp-section dp-section--stone" aria-labelledby="interiors-title">
+        <div className="dp-container">
+          <div className="dp-head dp-head--split">
+            <div>
+              <span className="dp-eyebrow" data-reveal>
+                Intérieurs
+              </span>
+              <h2 id="interiors-title" className="dp-h1 dp-head__title" data-reveal style={delay(0.08)}>
+                Appartement Témoin
+              </h2>
+            </div>
+            <div data-reveal style={delay(0.16)}>
+              <p className="dp-body">
+                Des appartements de luxe avec une climatisation centralisée, une isolation thermique et phonique,
+                une cuisine équipée et une salle de bain aménagée avec douche italienne.
+              </p>
+              <button type="button" className="dp-link dp-link--red dp-mt-s" onClick={() => onNavigate('contact')}>
+                Planifier une visite
+                <Arrow />
+              </button>
+            </div>
+          </div>
+          <Gallery images={showApartment} alt="Appartement témoin" className="dp-mosaic" sizes="(min-width: 768px) 40vw, 50vw" />
+        </div>
+      </section>
+
+      {/* Investir / Partenaire */}
+      <section className="dp-section dp-section--ink dp-on-dark" aria-labelledby="invest-title">
+        <div className="dp-container">
+          <div className="dp-head dp-head--split" style={{ marginBottom: 0 }}>
+            <div>
+              <span className="dp-eyebrow" data-reveal>
+                Investir
+              </span>
+              <h2 id="invest-title" className="dp-h1 dp-head__title" data-reveal style={delay(0.08)}>
+                Investir dans l'immobilier avec <span className="dp-accent">Djoudi Promotion</span>
+              </h2>
+            </div>
+            <p className="dp-lead" data-reveal style={delay(0.16)}>
+              {investText}
+            </p>
+          </div>
+        </div>
+
+        <div className="dp-container">
+          <div className="dp-media dp-invest__band" data-reveal="image">
+            <Img
+              src="/images/lux/lux-phase3-completed-dji0187.jpg"
+              alt="Résidence Lux 1 & 2 à Chéraga, vue aérienne au coucher du soleil"
+              sizes="(min-width: 1360px) 1300px, 100vw"
+              position="50% 60%"
+              parallax
+            />
+          </div>
+          <p className="dp-caption">Résidence Lux 1 &amp; 2, Chéraga · Livrée</p>
+        </div>
+
+        <div className="dp-container">
+          <h3 className="dp-h3" style={{ marginTop: 'clamp(56px, 8vw, 112px)' }} data-reveal>
+            Votre partenaire immobilier à Alger
+          </h3>
+          <div className="dp-pillars" style={{ marginTop: 32 }}>
+            {partnerParagraphs.map((paragraph, index) => (
+              <div key={index} className="dp-pillar" data-reveal style={delay(index * 0.08)}>
+                <span className="dp-num">{String(index + 1).padStart(2, '0')}</span>
+                <h3>{partnerLabels[index]}</h3>
+                <p className="dp-body">{paragraph}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Investir / Partenaire */}
-      <section className="py-20 bg-[#1a1a1a] text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Card className="bg-white/10 backdrop-blur-lg border-[#f04230]/30">
-              <CardContent className="p-8">
-                <h2 className="text-3xl text-[#f04230] mb-6">Investir dans l'immobilier avec Djoudi Promotion</h2>
-                <p className="text-gray-200">{investText}</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/10 backdrop-blur-lg border-[#f04230]/30">
-              <CardContent className="p-8">
-                <h2 className="text-3xl text-[#f04230] mb-6">Votre partenaire immobilier à Alger</h2>
-                <div className="space-y-4">
-                  {partnerParagraphs.map((paragraph, index) => (
-                    <p key={index} className="text-gray-200">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+      {/* Contact */}
+      <section className="dp-section" aria-labelledby="contact-title">
+        <div className="dp-container dp-contact">
+          <div className="dp-contact__intro">
+            <span className="dp-eyebrow" data-reveal>
+              Contact
+            </span>
+            <h2 id="contact-title" className="dp-h1 dp-mt-m" data-reveal style={delay(0.08)}>
+              N'hésitez pas à nous contacter
+            </h2>
+            <p className="dp-lead dp-mt-m dp-maxw-prose" data-reveal style={delay(0.16)}>
+              Que vous souhaitiez obtenir des informations sur nos résidences ou planifier une visite, notre équipe
+              est là pour vous.
+            </p>
+            <div className="dp-contact__ctas" data-reveal style={delay(0.24)}>
+              <button type="button" className="dp-btn dp-btn--primary" onClick={() => onNavigate('contact')}>
+                Nous contacter
+                <Arrow />
+              </button>
+              <a href={telHref(company.phones[0])} className="dp-btn dp-btn--dark">
+                Appeler le {company.phones[0]}
+              </a>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <Heart className="text-[#f04230] mx-auto mb-6" size={48} />
-          <h2 className="text-4xl mb-6">N'hésitez pas à nous contacter</h2>
-          <p className="text-xl text-gray-300 mb-8">
-            Que vous souhaitiez obtenir des informations sur nos résidences ou planifier une visite, notre
-            équipe est là pour vous.
-          </p>
-          <Button
-            onClick={() => onNavigate('contact')}
-            className="bg-[#f04230] text-white hover:bg-[#f04230]/90 px-8 py-6"
-          >
-            Nous contacter
-            <ArrowRight className="ml-2" size={20} />
-          </Button>
+          <div className="dp-contact__lines" data-reveal style={delay(0.16)}>
+            <ContactLines />
+          </div>
         </div>
       </section>
     </div>

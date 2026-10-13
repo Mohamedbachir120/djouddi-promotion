@@ -52,6 +52,9 @@ export const partnerParagraphs = [
   'Avec Djoudi Promotion, vous choisissez une vision audacieuse et un engagement à respecter les plus hauts standards pour vos projets immobiliers.',
 ];
 
+// Headings the contact page gives the four paragraphs above.
+export const partnerLabels = ['Notre métier', 'Notre expérience', 'Notre mission', 'Notre engagement'];
+
 export const contactIntro =
   'nous sommes à votre disposition pour répondre à toutes vos questions et vous accompagner dans la réalisation de vos projets immobiliers haut de gamme. Que vous souhaitiez obtenir des informations sur nos résidences ou planifier une visite, notre équipe est là pour vous.';
 
@@ -141,6 +144,10 @@ export interface Residence {
   name: string;
   location: string;
   cover: string;
+  /** CSS object-position for the cover photo when it is cropped. */
+  coverFocus?: string;
+  /** Shown on the cover when it does not depict the building itself. */
+  coverNote?: string;
   summary: string;
   description: string[];
   status?: string;
@@ -167,6 +174,7 @@ export const residences: Residence[] = [
     name: 'Résidence Le Versant',
     location: 'Dely Brahim, Alger',
     cover: '/images/le-versant/render-jour.jpg',
+    coverFocus: '55% 40%',
     summary:
       'Le Versant offre des appartements haut de gamme dans un cadre sécurisé, avec une vue imprenable sur Dely Brahim, alliant confort et luxe.',
     description: [
@@ -241,6 +249,7 @@ export const residences: Residence[] = [
     // No exterior photo of this residence exists in the reference media; the
     // original page itself only shows the show apartment.
     cover: '/images/appartement-temoin/dsc04950-balcony-view.jpg',
+    coverNote: 'Appartement témoin',
     units: '147 appartements',
     summary:
       "Avec une vue sur Mer qui surplombe la magnifique Baie d'Alger, Djoudi Promotion allie la luxure et haut standing avec le paysage merveilleux qu'offre la Baie de nôtre capitale.",
@@ -263,6 +272,7 @@ export const residences: Residence[] = [
     name: 'Résidence Colina del Viento',
     location: 'Draria, Alger',
     cover: '/images/colina-del-viento/render.jpg',
+    coverFocus: '40% 50%',
     summary:
       "Située au cœur de l'un des quartiers les plus prestigieux de Draria, la Résidence Colina del Viento distingue par son architecture moderne et élégante.",
     description: [

@@ -1,230 +1,161 @@
-import { Building2, Mail, MapPin, Phone, Users, Award, Target, Home } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import { Button } from './ui/button';
-import { Card, CardContent } from './ui/card';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Label } from './ui/label';
-import { aboutText, company, contactIntro, media, partnerParagraphs, residences } from '../data/site';
+import { aboutText, company, contactIntro, media, partnerLabels, partnerParagraphs, residences } from '../data/site';
+import { SocialLinks } from './Footer';
+import { ContactForm } from './site/ContactForm';
+import { Arrow, Media, delay, telHref } from './site/primitives';
 
 interface ContactPageProps {
-  onNavigate: (page: string) => void;
+  residenceId?: string;
+  onNavigate: (page: string, siteId?: string) => void;
 }
 
-const values = [
-  { icon: Building2, title: 'Notre métier' },
-  { icon: Award, title: 'Notre expérience' },
-  { icon: Target, title: 'Notre mission' },
-  { icon: Users, title: 'Notre engagement' },
-];
-
-export function ContactPage({ onNavigate }: ContactPageProps) {
+/** Phones, email and address as a labelled list; shared by the home page. */
+export function ContactLines({ withNote = false }: { withNote?: boolean }) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
-      <section className="bg-[#1a1a1a] text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-5xl text-[#f04230] mb-4">N'hésitez pas à nous contacter</h1>
-          <p className="text-xl text-gray-300 max-w-3xl">
+    <dl className="dp-lines">
+      <div>
+        <dt>Téléphone</dt>
+        <dd>
+          {company.phones.map((phone) => (
+            <a key={phone} href={telHref(phone)}>
+              {phone}
+            </a>
+          ))}
+        </dd>
+      </div>
+      <div>
+        <dt>Email</dt>
+        <dd>
+          <a href={`mailto:${company.email}`}>{company.email}</a>
+        </dd>
+      </div>
+      <div>
+        <dt>Siège</dt>
+        <dd>
+          <span>
+            {company.address[0]}
+            <br />
+            {company.address[1]}
+          </span>
+          {withNote && <small>{company.addressNote}</small>}
+        </dd>
+      </div>
+    </dl>
+  );
+}
+
+export function ContactPage({ residenceId = '', onNavigate }: ContactPageProps) {
+  const site = residences.find((r) => r.id === residenceId);
+
+  return (
+    <div>
+      <section className="dp-page-hero dp-on-dark">
+        <div className="dp-container">
+          <span className="dp-eyebrow dp-rise" style={delay(0.1)}>
+            Contact
+          </span>
+          <h1 className="dp-h1 dp-page-hero__title">
+            <span className="dp-mask">
+              <span style={delay(0.2)}>N'hésitez pas à nous contacter</span>
+            </span>
+          </h1>
+          <p className="dp-lead dp-page-hero__lead dp-rise" style={delay(0.45)}>
             Chez Djoudi Promotion, {contactIntro}
           </p>
         </div>
       </section>
 
-      {/* About Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl text-[#0A1128] mb-6">Qui sommes-nous ?</h2>
-              <p className="text-gray-700 mb-6">
-                <span className="text-[#f04230]">Djoudi Promotion</span> {aboutText}
-              </p>
-              <div className="grid grid-cols-2 gap-6">
-                <Card className="text-center p-6 bg-[#f04230]/10 border-[#f04230]">
-                  <CardContent className="pt-6">
-                    <Building2 className="text-[#f04230] mx-auto mb-3" size={40} />
-                    <div className="text-3xl text-[#0A1128] mb-2">{residences.length}</div>
-                    <p className="text-gray-600">Résidences</p>
-                  </CardContent>
-                </Card>
-                <Card className="text-center p-6 bg-[#f04230]/10 border-[#f04230]">
-                  <CardContent className="pt-6">
-                    <Home className="text-[#f04230] mx-auto mb-3" size={40} />
-                    <div className="text-3xl text-[#0A1128] mb-2">F2 à F6</div>
-                    <p className="text-gray-600">Appartements haut standing</p>
-                  </CardContent>
-                </Card>
-              </div>
+      <section className="dp-section" aria-labelledby="form-title">
+        <div className="dp-container dp-contact-page">
+          <div className="dp-contact-page__form">
+            <span className="dp-eyebrow" data-reveal>
+              {site ? site.name : 'Contactez-nous'}
+            </span>
+            <h2 id="form-title" className="dp-h2 dp-mt-m" data-reveal style={delay(0.08)}>
+              Envoyez-nous un message
+            </h2>
+            <p className="dp-body dp-mt-s" data-reveal style={delay(0.12)}>
+              Notre équipe est là pour vous renseigner sur nos résidences ou planifier une visite.
+            </p>
+            <div className="dp-mt-l" data-reveal style={delay(0.16)}>
+              <ContactForm key={residenceId} residenceId={residenceId} />
             </div>
-            <div className="relative h-96 rounded-lg overflow-hidden shadow-2xl">
-              <ImageWithFallback
-                src={media.headquarters}
-                alt="Entrée du siège de Djoudi Promotion"
-                className="w-full h-full object-cover"
-              />
+          </div>
+
+          <aside className="dp-contact-page__info" data-reveal style={delay(0.2)}>
+            <h2 className="dp-h3" style={{ marginBottom: 24 }}>
+              Nos coordonnées
+            </h2>
+            <ContactLines withNote />
+            <div className="dp-mt-m">
+              <SocialLinks />
             </div>
+          </aside>
+        </div>
+
+        <div className="dp-container" style={{ marginTop: 'clamp(72px, 9vw, 128px)' }}>
+          <div className="dp-block__head">
+            <h2 className="dp-h3">Notre localisation</h2>
+            <span className="dp-body">Dely Brahim, Alger</span>
+          </div>
+          <div className="dp-map" data-reveal>
+            <iframe title="Djoudi Promotion - Dely Brahim" src={company.mapEmbedUrl} loading="lazy" />
           </div>
         </div>
       </section>
 
-      {/* Partner Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl text-[#0A1128] mb-4">Votre partenaire immobilier à Alger</h2>
+      <section className="dp-section dp-section--stone" aria-labelledby="who-title">
+        <div className="dp-container dp-about">
+          <div className="dp-about__text">
+            <span className="dp-eyebrow" data-reveal id="who-title">
+              Qui sommes-nous ?
+            </span>
+            <p className="dp-about__statement dp-mt-m" data-reveal style={delay(0.08)}>
+              <strong>Djoudi Promotion</strong> {aboutText}.
+            </p>
           </div>
+          <div className="dp-about__media" style={{ paddingBottom: 0 }}>
+            <Media
+              src={media.headquarters}
+              alt="Entrée du siège de Djoudi Promotion"
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              className="dp-about__img-main"
+            />
+            <p className="dp-caption">Le siège, au sein de la Résidence Le Versant</p>
+          </div>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <Card key={value.title} className="text-center p-6 hover:shadow-lg transition-shadow">
-                <CardContent className="pt-6">
-                  <div className="w-16 h-16 bg-[#f04230]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <value.icon className="text-[#f04230]" size={32} />
-                  </div>
-                  <h3 className="text-xl text-[#0A1128] mb-3">{value.title}</h3>
-                  <p className="text-gray-600">{partnerParagraphs[index]}</p>
-                </CardContent>
-              </Card>
+        <div className="dp-container">
+          <h2 className="dp-h3" style={{ marginTop: 'clamp(72px, 9vw, 128px)' }} data-reveal>
+            Votre partenaire immobilier à Alger
+          </h2>
+          <div className="dp-pillars dp-pillars--light" style={{ marginTop: 32 }}>
+            {partnerParagraphs.map((paragraph, index) => (
+              <div key={partnerLabels[index]} className="dp-pillar" data-reveal style={delay(index * 0.08)}>
+                <span className="dp-num">{String(index + 1).padStart(2, '0')}</span>
+                <h3>{partnerLabels[index]}</h3>
+                <p className="dp-body">{paragraph}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl text-[#0A1128] mb-4">Contactez-nous</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Notre équipe est là pour vous renseigner sur nos résidences ou planifier une visite
+      <section className="dp-section" style={{ paddingBlock: 'clamp(72px, 9vw, 128px)' }}>
+        <div className="dp-container dp-cta">
+          <div>
+            <h2 className="dp-h2" data-reveal>
+              Prêt à découvrir nos projets ?
+            </h2>
+            <p className="dp-lead dp-mt-s" data-reveal style={delay(0.08)}>
+              Le Versant, Lux 1 &amp; 2, La Baie d'Alger et Colina del Viento
             </p>
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <Card>
-              <CardContent className="p-8">
-                <h3 className="text-2xl text-[#0A1128] mb-6">Envoyez-nous un message</h3>
-                <form className="space-y-6">
-                  <div>
-                    <Label htmlFor="name">Nom</Label>
-                    <Input id="name" type="text" placeholder="Votre nom" className="mt-2" />
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="votre.email@exemple.com" className="mt-2" />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone">Téléphone</Label>
-                    <Input id="phone" type="tel" placeholder="05XX XX XX XX" className="mt-2" />
-                  </div>
-                  <div>
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea
-                      id="message"
-                      placeholder="Votre message..."
-                      rows={5}
-                      className="mt-2"
-                    />
-                  </div>
-                  <Button className="w-full bg-[#f04230] text-white hover:bg-[#f04230]/90">Envoyer</Button>
-                </form>
-              </CardContent>
-            </Card>
-
-            {/* Contact Info */}
-            <div className="space-y-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-[#f04230]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Phone className="text-[#f04230]" size={24} />
-                    </div>
-                    <div>
-                      <h4 className="text-[#0A1128] mb-2">Numéro de téléphone</h4>
-                      {company.phones.map((phone) => (
-                        <p key={phone} className="text-gray-600">
-                          <a href={`tel:${phone.replace(/\s/g, '')}`} className="hover:text-[#f04230]">
-                            {phone}
-                          </a>
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-[#f04230]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Mail className="text-[#f04230]" size={24} />
-                    </div>
-                    <div>
-                      <h4 className="text-[#0A1128] mb-2">Email</h4>
-                      <p className="text-gray-600">
-                        <a href={`mailto:${company.email}`} className="hover:text-[#f04230]">
-                          {company.email}
-                        </a>
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-[#f04230]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <MapPin className="text-[#f04230]" size={24} />
-                    </div>
-                    <div>
-                      <h4 className="text-[#0A1128] mb-2">Adresse</h4>
-                      <p className="text-gray-600">
-                        {company.address[0]}
-                        <br />
-                        {company.address[1]}
-                      </p>
-                      <p className="text-sm text-gray-500 mt-2">{company.addressNote}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Map Card */}
-              <Card>
-                <CardContent className="p-6">
-                  <h4 className="text-[#0A1128] mb-4">Notre localisation</h4>
-                  <div className="w-full h-64 bg-gray-200 rounded-lg overflow-hidden">
-                    <iframe
-                      title="Djoudi Promotion - Dely Brahim"
-                      src={company.mapEmbedUrl}
-                      className="w-full h-full"
-                      loading="lazy"
-                      style={{ border: 0 }}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+          <div className="dp-cta__actions" data-reveal style={delay(0.16)}>
+            <button type="button" className="dp-btn dp-btn--primary" onClick={() => onNavigate('sites')}>
+              Découvrir nos résidences
+              <Arrow />
+            </button>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-[#1a1a1a] text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl text-[#f04230] mb-6">Prêt à découvrir nos projets ?</h2>
-          <p className="text-xl text-gray-300 mb-8">
-            Le Versant, Lux 1 &amp; 2, La Baie d'Alger et Colina del Viento
-          </p>
-          <Button
-            onClick={() => onNavigate('sites')}
-            className="bg-[#f04230] text-white hover:bg-[#f04230]/90 px-8 py-6"
-          >
-            Découvrir nos résidences
-          </Button>
         </div>
       </section>
     </div>
