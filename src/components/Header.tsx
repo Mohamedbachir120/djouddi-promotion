@@ -64,8 +64,7 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
       >
         <div className="dp-container dp-header__bar">
           <button type="button" onClick={() => go('home')} className="dp-brand" aria-label="Djoudi Promotion – Accueil">
-            <span className="dp-brand__mark">DP</span>
-            <span className="dp-brand__name">Djoudi Promotion</span>
+            <img src="/images/brand/logo-djoudi-light.png" alt="" className="dp-brand__logo" width={300} height={176} />
           </button>
 
           <nav className="dp-nav" aria-label="Navigation principale">

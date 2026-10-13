@@ -296,7 +296,17 @@ body.dp-lock {
   color: var(--dp-red);
 }
 
-/* ---------- Brand mark (unchanged logo: "DP" on a red square) ---------- */
+/* ---------- Brand logo ---------- */
+
+.dp-brand__logo {
+  display: block;
+  height: 48px;
+  width: auto;
+  transition: height 0.5s var(--dp-ease);
+}
+.dp-header.is-solid .dp-brand__logo {
+  height: 42px;
+}
 
 .dp-brand {
   display: inline-flex;
@@ -2042,93 +2052,312 @@ body.dp-lock {
   gap: 12px;
 }
 
-/* ---------- Footer ---------- */
+/* ---------- Footer: architectural finale ---------- */
 
 .dp-footer {
   background: var(--dp-ink);
   color: #fff;
+  overflow: hidden;
 }
-.dp-footer__top {
-  padding-block: clamp(72px, 9vw, 128px) clamp(48px, 6vw, 80px);
-  border-bottom: 1px solid var(--dp-line-dark);
+.dp-flabel {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 14px;
 }
-.dp-footer__grid {
-  padding-block: clamp(48px, 6vw, 80px);
+
+/* Foreground information, set on an asymmetric 12-column stage. */
+.dp-fstage {
   display: grid;
-  gap: 48px 32px;
+  gap: 56px 32px;
+  padding-top: clamp(80px, 10vw, 152px);
+  padding-bottom: clamp(24px, 4vw, 56px);
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.dp-footer__brand {
+.dp-fstage__lead,
+.dp-fstage__contact,
+.dp-fstage__form {
   grid-column: 1 / -1;
 }
-.dp-footer__form {
-  grid-column: 1 / -1;
+.dp-fstage__logo {
+  display: block;
+  height: 64px;
+  width: auto;
 }
-.dp-footer h3 {
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.56);
-  margin-bottom: 20px;
+.dp-fstage__statement {
+  margin-top: clamp(32px, 4vw, 56px);
+  font-size: clamp(2.25rem, 4.6vw, 4.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  max-width: 13ch;
+  text-wrap: balance;
 }
-.dp-footer__links {
+.dp-fstage .dp-cta__actions {
+  margin-top: 32px;
+}
+.dp-fstage__contact {
+  font-style: normal;
   display: grid;
-  gap: 12px;
+  align-content: start;
 }
-.dp-footer__links button,
-.dp-footer__links a {
+.dp-fstage__contact .dp-flabel:not(:first-child) {
+  margin-top: 28px;
+}
+.dp-fstage__phones {
+  display: grid;
+  gap: 2px;
+}
+.dp-fstage__phones a {
+  font-size: clamp(1.5rem, 2.4vw, 2.125rem);
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  width: fit-content;
+  transition: color 0.3s;
+}
+.dp-fstage__email {
+  font-size: clamp(1rem, 1.3vw, 1.1875rem);
+  width: fit-content;
+  overflow-wrap: anywhere;
+  transition: color 0.3s;
+}
+.dp-fstage__phones a:hover,
+.dp-fstage__email:hover {
+  color: var(--dp-red);
+}
+.dp-fstage__address {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+}
+.dp-fstage__res ul,
+.dp-fstage__links ul {
+  display: grid;
+  border-top: 1px solid var(--dp-line-dark);
+}
+.dp-fstage__res button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 2px 8px;
   text-align: left;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--dp-line-dark);
+  cursor: pointer;
+  transition: padding 0.5s var(--dp-ease);
+}
+.dp-fstage__res button:hover {
+  padding-left: 8px;
+}
+.dp-fstage__resname {
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+  transition: color 0.3s;
+}
+.dp-fstage__res button:hover .dp-fstage__resname {
+  color: var(--dp-red);
+}
+.dp-fstage__resloc {
+  grid-column: 2;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+.dp-fstage__links button {
+  width: 100%;
+  text-align: left;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--dp-line-dark);
   font-size: 0.9375rem;
   color: rgba(255, 255, 255, 0.82);
   cursor: pointer;
   transition: color 0.3s;
-  font-variant-numeric: tabular-nums;
 }
-.dp-footer__links button:hover,
-.dp-footer__links a:hover {
+.dp-fstage__links button:hover {
   color: var(--dp-red);
 }
-.dp-footer__tagline {
-  margin-top: 20px;
-  max-width: 22rem;
-  font-size: 0.9375rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.66);
+.dp-fstage__social {
+  margin-top: 28px;
 }
-.dp-footer__bottom {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 12px 24px;
-  padding-block: 24px 32px;
-  border-top: 1px solid var(--dp-line-dark);
+@media (min-width: 768px) {
+  .dp-fstage__contact,
+  .dp-fstage__form {
+    grid-column: auto;
+  }
+  .dp-fstage__lead {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 1100px) {
+  .dp-fstage {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--dp-gap);
+    row-gap: clamp(64px, 7vw, 104px);
+  }
+  .dp-fstage__lead {
+    grid-column: 1 / span 7;
+  }
+  .dp-fstage__contact {
+    grid-column: 9 / span 4;
+    padding-top: 6px;
+  }
+  .dp-fstage__res {
+    grid-column: 1 / span 4;
+  }
+  .dp-fstage__links {
+    grid-column: 6 / span 2;
+  }
+  .dp-fstage__form {
+    grid-column: 9 / span 4;
+  }
+}
+
+/* The closing composition: logo roofs over a wordmark of towers. */
+.dp-finale {
+  position: relative;
+  margin-top: clamp(8px, 2vw, 24px);
+  --px: 0;
+  --py: 0;
+}
+.dp-finale svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.dp-finale__type {
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 430px;
+  letter-spacing: 0;
+}
+.dp-finale__outline {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1.5;
+}
+.dp-finale__roof {
+  fill: none;
+  stroke: var(--dp-red);
+  stroke-width: 16;
+  stroke-linejoin: miter;
+  stroke-linecap: butt;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.dp-finale__lit {
+  fill: #f3e2c4;
+  opacity: 0.45;
+}
+.dp-finale__construct line {
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 8;
+}
+.dp-finale__ground {
+  stroke: rgba(255, 255, 255, 0.28);
+  stroke-width: 1;
+}
+.dp-finale__tick {
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 1;
+}
+.dp-finale__roofs,
+.dp-finale__par {
+  transition: transform 0.9s var(--dp-ease);
+}
+.dp-finale__roofs {
+  transform: translate(calc(var(--px) * -22px), calc(var(--py) * -12px));
+}
+.dp-finale__par {
+  transform: translate(calc(var(--px) * -8px), calc(var(--py) * -4px));
+}
+
+/* Motion: towers rise out of the ground, then the roofs are drawn. */
+.dp-motion [data-reveal='finale'] {
+  opacity: 1;
+  transform: none;
+}
+.dp-motion [data-reveal='finale'] .dp-finale__towers {
+  transform: translate(0, 62%);
+  transition: transform 2s var(--dp-ease);
+}
+.dp-motion [data-reveal='finale'].is-in .dp-finale__towers {
+  transform: none;
+}
+.dp-motion [data-reveal='finale'] .dp-finale__roof {
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.6s var(--dp-ease-io) 0.9s;
+}
+.dp-motion [data-reveal='finale'] .dp-finale__roof--big {
+  transition-delay: 1.15s;
+}
+.dp-motion [data-reveal='finale'].is-in .dp-finale__roof {
+  stroke-dashoffset: 0;
+}
+.dp-motion [data-reveal='finale'] .dp-finale__lit,
+.dp-motion [data-reveal='finale'] .dp-finale__construct {
+  opacity: 0;
+}
+.dp-motion [data-reveal='finale'] .dp-finale__construct {
+  transition: opacity 1.2s var(--dp-ease) 0.4s;
+}
+.dp-motion [data-reveal='finale'].is-in .dp-finale__construct {
+  opacity: 1;
+}
+.dp-motion [data-reveal='finale'].is-in .dp-finale__lit {
+  animation: dp-window 9s ease-in-out infinite both;
+}
+@keyframes dp-window {
+  0%,
+  100% {
+    opacity: 0.12;
+  }
+  30%,
+  70% {
+    opacity: 0.5;
+  }
+}
+
+/* Title block */
+.dp-ftitle {
+  background: #141414;
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.62);
 }
-.dp-footer__bottom button {
+.dp-ftitle__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.dp-ftitle__grid > div {
+  padding: 18px 16px 22px 0;
+  border-top: 1px solid var(--dp-line-dark);
+}
+.dp-ftitle .dp-flabel {
+  margin-bottom: 6px;
+  color: rgba(255, 255, 255, 0.4);
+}
+.dp-ftitle button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.7);
   transition: color 0.3s;
+  padding-top: 18px;
 }
-.dp-footer__bottom button:hover {
+.dp-ftitle button:hover {
   color: #fff;
 }
-@media (min-width: 768px) {
-  .dp-footer__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+@media (min-width: 900px) {
+  .dp-ftitle__grid {
+    grid-template-columns: 1.3fr 0.8fr 1.4fr auto;
   }
-}
-@media (min-width: 1200px) {
-  .dp-footer__grid {
-    grid-template-columns: 1.3fr 1fr 0.8fr 1.3fr;
-  }
-  .dp-footer__brand,
-  .dp-footer__form {
-    grid-column: auto;
+  .dp-ftitle__grid > div + div {
+    padding-left: 20px;
+    border-left: 1px solid var(--dp-line-dark);
   }
 }
 

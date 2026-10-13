@@ -1,7 +1,8 @@
 import { ArrowUp, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react';
 import { company, residences } from '../data/site';
 import { QuickContactForm } from './site/ContactForm';
-import { Arrow, telHref } from './site/primitives';
+import { FooterFinale } from './site/FooterFinale';
+import { Arrow, delay, telHref } from './site/primitives';
 
 interface FooterProps {
   onNavigate: (page: string, siteId?: string) => void;
@@ -35,104 +36,123 @@ export function SocialLinks() {
   );
 }
 
+const communes = residences.map((r) => r.location.split(',')[0]).join(' · ');
+
 export function Footer({ onNavigate }: FooterProps) {
   return (
     <footer className="dp-footer dp-on-dark">
-      <div className="dp-container">
-        <div className="dp-footer__top dp-cta">
-          <div>
-            <span className="dp-eyebrow">Djoudi Promotion</span>
-            <p className="dp-h2" style={{ marginTop: 20, maxWidth: '18ch' }}>
-              Bien plus que des appartements de <span className="dp-accent">Luxe.</span>
-            </p>
-          </div>
-          <div className="dp-cta__actions">
+      <div className="dp-container dp-fstage">
+        {/* Statement and primary actions */}
+        <div className="dp-fstage__lead">
+          <button type="button" className="dp-brand" onClick={() => onNavigate('home')} aria-label="Djoudi Promotion – Accueil">
+            <img src="/images/brand/logo-djoudi-light.png" alt="" className="dp-fstage__logo" width={300} height={176} loading="lazy" />
+          </button>
+          <p className="dp-fstage__statement" data-reveal>
+            Bien plus que des appartements de <span className="dp-accent">Luxe.</span>
+          </p>
+          <div className="dp-cta__actions" data-reveal style={delay(0.08)}>
             <button type="button" className="dp-btn dp-btn--primary" onClick={() => onNavigate('contact')}>
               Planifier une visite
               <Arrow />
             </button>
-            <a href={telHref(company.phones[0])} className="dp-btn dp-btn--light">
-              {company.phones[0]}
-            </a>
           </div>
         </div>
 
-        <div className="dp-footer__grid">
-          <div className="dp-footer__brand">
-            <button type="button" className="dp-brand" onClick={() => onNavigate('home')} aria-label="Accueil">
-              <span className="dp-brand__mark">DP</span>
-              <span className="dp-brand__name">Djoudi Promotion</span>
+        {/* Direct contact, set large: it is what most visitors come down here for */}
+        <address className="dp-fstage__contact" data-reveal style={delay(0.12)}>
+          <span className="dp-flabel">Téléphone</span>
+          <div className="dp-fstage__phones">
+            {company.phones.map((phone) => (
+              <a key={phone} href={telHref(phone)}>
+                {phone}
+              </a>
+            ))}
+          </div>
+          <span className="dp-flabel">Email</span>
+          <a className="dp-fstage__email" href={`mailto:${company.email}`}>
+            {company.email}
+          </a>
+          <span className="dp-flabel">Siège</span>
+          <p className="dp-fstage__address">
+            {company.address[0]}
+            <br />
+            {company.address[1]}
+          </p>
+        </address>
+
+        <nav className="dp-fstage__res" aria-label="Nos résidences">
+          <span className="dp-flabel">Nos Résidences</span>
+          <ul>
+            {residences.map((site, i) => (
+              <li key={site.id}>
+                <button type="button" onClick={() => onNavigate('site-detail', site.id)}>
+                  <span className="dp-num">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="dp-fstage__resname">{site.name.replace('Résidence ', '')}</span>
+                  <span className="dp-fstage__resloc">{site.location.split(',')[0]}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav className="dp-fstage__links" aria-label="Liens">
+          <span className="dp-flabel">Liens</span>
+          <ul>
+            <li>
+              <button type="button" onClick={() => onNavigate('home')}>
+                Accueil
+              </button>
+            </li>
+            <li>
+              <button type="button" onClick={() => onNavigate('sites')}>
+                Nos Résidences
+              </button>
+            </li>
+            <li>
+              <button type="button" onClick={() => onNavigate('activities')}>
+                Commodités
+              </button>
+            </li>
+            <li>
+              <button type="button" onClick={() => onNavigate('contact')}>
+                Contact
+              </button>
+            </li>
+          </ul>
+          <div className="dp-fstage__social">
+            <SocialLinks />
+          </div>
+        </nav>
+
+        <div className="dp-fstage__form">
+          <span className="dp-flabel">Contact rapide</span>
+          <QuickContactForm />
+        </div>
+      </div>
+
+      <FooterFinale />
+
+      {/* Title block, as on an architectural drawing */}
+      <div className="dp-ftitle">
+        <div className="dp-container dp-ftitle__grid">
+          <div>
+            <span className="dp-flabel">Promoteur</span>
+            <p>&copy; {new Date().getFullYear()} Djoudi Promotion. Tous droits réservés.</p>
+          </div>
+          <div>
+            <span className="dp-flabel">Siège</span>
+            <p>Dely Brahim, Alger</p>
+          </div>
+          <div>
+            <span className="dp-flabel">Résidences</span>
+            <p>{communes}</p>
+          </div>
+          <div>
+            <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              Haut de page
+              <ArrowUp size={14} />
             </button>
-            <p className="dp-footer__tagline">Appartements haut standing. Durabilité, confort et standing inégalés.</p>
-            <address className="dp-footer__links" style={{ marginTop: 28, fontStyle: 'normal' }}>
-              <span style={{ color: 'rgba(255,255,255,.66)', fontSize: '0.9375rem', lineHeight: 1.6 }}>
-                {company.address[0]}
-                <br />
-                {company.address[1]}
-              </span>
-              {company.phones.map((phone) => (
-                <a key={phone} href={telHref(phone)}>
-                  {phone}
-                </a>
-              ))}
-              <a href={`mailto:${company.email}`}>{company.email}</a>
-            </address>
-            <div style={{ marginTop: 28 }}>
-              <SocialLinks />
-            </div>
           </div>
-
-          <nav aria-label="Nos résidences">
-            <h3>Nos Résidences</h3>
-            <ul className="dp-footer__links">
-              {residences.map((site) => (
-                <li key={site.id}>
-                  <button type="button" onClick={() => onNavigate('site-detail', site.id)}>
-                    {site.name.replace('Résidence ', '')}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <nav aria-label="Liens">
-            <h3>Liens</h3>
-            <ul className="dp-footer__links">
-              <li>
-                <button type="button" onClick={() => onNavigate('home')}>
-                  Accueil
-                </button>
-              </li>
-              <li>
-                <button type="button" onClick={() => onNavigate('sites')}>
-                  Nos Résidences
-                </button>
-              </li>
-              <li>
-                <button type="button" onClick={() => onNavigate('activities')}>
-                  Commodités
-                </button>
-              </li>
-              <li>
-                <button type="button" onClick={() => onNavigate('contact')}>
-                  Contact
-                </button>
-              </li>
-            </ul>
-          </nav>
-
-          <div className="dp-footer__form">
-            <h3>Contact rapide</h3>
-            <QuickContactForm />
-          </div>
-        </div>
-
-        <div className="dp-footer__bottom">
-          <p>&copy; {new Date().getFullYear()} Djoudi Promotion. Tous droits réservés.</p>
-          <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            Haut de page
-            <ArrowUp size={14} />
-          </button>
         </div>
       </div>
     </footer>
