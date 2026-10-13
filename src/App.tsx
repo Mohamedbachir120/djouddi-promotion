@@ -40,7 +40,7 @@ function App() {
     <div className="min-h-screen flex flex-col">
       <Header currentPage={currentPage} onNavigate={handleNavigate} />
       <main className="flex-grow">{renderPage()}</main>
-      <Footer />
+      <Footer onNavigate={handleNavigate} />
     </div>
   );
 }
