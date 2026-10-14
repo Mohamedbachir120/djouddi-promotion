@@ -1,0 +1,512 @@
+/*
+ * Cinematic layer.
+ * Default rules give every scene a plain, stacked layout (phones, reduced
+ * motion, no JS). Rules under `.dp-cine` (large screens with motion allowed,
+ * set on <html> by watchCinema) turn the same markup into full-viewport
+ * stages whose movement is choreographed by GSAP ScrollTrigger.
+ */
+
+/* ---------- Opening scene ---------- */
+
+.dp-hero__media {
+  transform-origin: 50% 60%;
+}
+.dp-hero__content {
+  position: relative;
+}
+.dp-hero__fade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #111;
+  opacity: 0;
+  pointer-events: none;
+}
+.dp-hero__bars {
+  display: none;
+}
+.dp-motion .dp-hero__bars {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+}
+.dp-hero__bars i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
+  background: #0d0d0d;
+}
+.dp-hero__bars i:first-child {
+  top: 0;
+  transform-origin: top;
+}
+.dp-hero__bars i:last-child {
+  bottom: 0;
+  transform-origin: bottom;
+}
+.dp-motion .dp-hero__bars i {
+  animation: dp-bars-open 1.7s var(--dp-ease-io) 0.25s both;
+}
+@keyframes dp-bars-open {
+  0% {
+    transform: scaleY(1);
+  }
+  55% {
+    transform: scaleY(0.16);
+  }
+  100% {
+    transform: scaleY(0);
+  }
+}
+
+.dp-hero__word {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.09em;
+  margin-bottom: -0.09em;
+  white-space: nowrap;
+}
+.dp-ltr {
+  display: inline-block;
+}
+.dp-motion .dp-ltr {
+  animation: dp-ltr-in 1.5s var(--dp-ease) both;
+  animation-delay: var(--d, 0s);
+}
+@keyframes dp-ltr-in {
+  from {
+    transform: translate3d(0, 108%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.dp-hero__scene {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .dp-hero__scene {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    position: absolute;
+    right: calc(var(--dp-gutter) * 0.5);
+    top: 50%;
+    margin-top: -150px;
+    height: 300px;
+    writing-mode: vertical-rl;
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.62);
+  }
+  .dp-hero__scene .dp-num {
+    color: #fff;
+  }
+}
+
+/* ---------- Chapters (default: stacked photo sequence) ---------- */
+
+.dp-chapters {
+  background: #111;
+  color: #fff;
+  padding-block: var(--dp-section);
+}
+.dp-chapters__intro {
+  display: grid;
+  gap: 20px;
+  margin-bottom: clamp(64px, 9vw, 128px);
+}
+.dp-chapters__intro .dp-lead {
+  max-width: 36rem;
+  color: var(--dp-mute-dark);
+}
+.dp-chapters__end {
+  margin-top: clamp(80px, 10vw, 144px);
+  text-align: center;
+}
+.dp-ch + .dp-ch {
+  margin-top: clamp(96px, 12vw, 176px);
+}
+
+.dp-ch__stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: var(--dp-maxw);
+  margin-inline: auto;
+  padding-inline: var(--dp-gutter);
+}
+.dp-ch__hud {
+  order: 1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+.dp-ch__hud .dp-num {
+  color: var(--dp-red);
+}
+.dp-ch__bar {
+  display: none;
+}
+.dp-ch__title {
+  order: 2;
+  font-weight: 400;
+  font-size: clamp(2.75rem, 8vw, 7rem);
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+}
+.dp-ch__ln {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.dp-ch__ln > span {
+  display: block;
+}
+.dp-ch__title .dp-ch__kicker {
+  font-size: 0.75rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.9rem;
+  line-height: 1.6;
+}
+.dp-ch__cam {
+  order: 3;
+  display: grid;
+  gap: 14px;
+  margin-top: 8px;
+}
+.dp-ch__layer {
+  margin: 0;
+}
+.dp-ch__frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: #1c1c1c;
+}
+.dp-ch__frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dp-ch__cap {
+  margin-top: 10px;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.62);
+}
+.dp-ch [data-cine-only],
+.dp-ch__veil,
+.dp-ch__sweep,
+.dp-ch__aperture,
+.dp-ch__ground {
+  display: none;
+}
+.dp-ch__facts {
+  order: 4;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--dp-line-dark);
+}
+.dp-ch__facts li {
+  display: grid;
+  gap: 4px;
+  padding: 14px 12px 14px 0;
+  border-bottom: 1px solid var(--dp-line-dark);
+}
+.dp-ch__facts span {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+.dp-ch__facts strong {
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.dp-ch__body {
+  margin-top: clamp(28px, 4vw, 56px);
+  display: grid;
+  gap: 28px;
+}
+.dp-ch__summary {
+  color: rgba(255, 255, 255, 0.86);
+  max-width: 40rem;
+}
+.dp-ch__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 28px;
+}
+
+@media (min-width: 768px) {
+  .dp-ch__cam {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .dp-ch__layer:first-child {
+    grid-column: 1 / -1;
+  }
+  .dp-ch__layer:first-child .dp-ch__frame {
+    aspect-ratio: 16 / 9;
+  }
+  .dp-ch__facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .dp-ch__body {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--dp-gap);
+    align-items: start;
+  }
+  .dp-ch__body {
+    align-items: end;
+  }
+  .dp-ch__summary {
+    grid-column: 1 / span 7;
+  }
+  .dp-ch__side {
+    grid-column: 9 / span 4;
+    justify-self: end;
+  }
+}
+
+/* ---------- Chapters as full-viewport stages ---------- */
+
+.dp-cine .dp-chapters {
+  padding-bottom: clamp(96px, 10vw, 144px);
+}
+.dp-cine .dp-ch + .dp-ch {
+  margin-top: clamp(72px, 8vw, 120px);
+}
+.dp-cine .dp-ch__stage {
+  display: block;
+  height: 100vh;
+  height: 100svh;
+  max-width: none;
+  padding: 0;
+  overflow: hidden;
+  background: #0d0d0d;
+}
+/* Constant scrim keeps the overlaid type legible over bright skies. */
+.dp-cine .dp-ch__stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55) 0%, rgba(10, 10, 10, 0) 22%),
+    linear-gradient(0deg, rgba(10, 10, 10, 0.78) 0%, rgba(10, 10, 10, 0) 45%);
+}
+.dp-cine .dp-ch__cam {
+  position: absolute;
+  inset: 0;
+  display: block;
+  margin: 0;
+}
+.dp-cine .dp-ch__layer {
+  position: absolute;
+  inset: 0;
+}
+.dp-cine .dp-ch [data-cine-only] {
+  display: block;
+}
+.dp-cine .dp-ch__frame,
+.dp-cine .dp-ch__layer:first-child .dp-ch__frame {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  background: transparent;
+}
+.dp-cine .dp-ch__frame img {
+  transform-origin: var(--focus, 50% 50%);
+  will-change: transform;
+}
+/* The scroll choreography owns these elements: switch off the generic reveal. */
+.dp-cine .dp-ch__stage [data-reveal] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+.dp-cine .dp-ch__stage [data-reveal='image'] img,
+.dp-cine .dp-ch__stage [data-reveal='image'].is-in img {
+  clip-path: none;
+  transition: none;
+}
+
+.dp-cine .dp-ch__cap {
+  position: absolute;
+  top: 88px;
+  right: var(--dp-gutter);
+  z-index: 2;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+}
+.dp-cine .dp-ch__cap::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--dp-red);
+}
+.dp-cine .dp-ch__veil {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #0a0a0a;
+  opacity: 0;
+  pointer-events: none;
+}
+.dp-cine .dp-ch__hud {
+  position: absolute;
+  z-index: 3;
+  top: 36px;
+  left: var(--dp-gutter);
+  right: var(--dp-gutter);
+}
+.dp-cine .dp-ch__bar {
+  display: block;
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+.dp-cine .dp-ch__bar b {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+.dp-cine .dp-ch__title {
+  position: absolute;
+  z-index: 3;
+  left: var(--dp-gutter);
+  bottom: clamp(40px, 7vh, 72px);
+  max-width: 60vw;
+  font-size: clamp(4rem, 8.4vw, 9.5rem);
+}
+.dp-cine .dp-ch__facts {
+  position: absolute;
+  z-index: 3;
+  right: var(--dp-gutter);
+  bottom: clamp(44px, 7vh, 76px);
+  width: min(30rem, 32vw);
+  grid-template-columns: 1fr;
+  border-top-color: rgba(255, 255, 255, 0.22);
+}
+.dp-cine .dp-ch__facts li {
+  grid-template-columns: 7rem 1fr;
+  align-items: baseline;
+  border-bottom-color: rgba(255, 255, 255, 0.22);
+}
+.dp-cine .dp-ch__facts strong {
+  font-size: 1.0625rem;
+}
+
+/* 01 · Le Versant: the sweep line that turns day into night */
+.dp-cine .dp-ch__sweep {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  width: 1px;
+  background: #fff;
+  box-shadow: 0 0 24px 6px rgba(255, 236, 200, 0.35);
+}
+
+/* 02 · Lux: title above, facts along the left, the façade opens as a tall panel on the right */
+.dp-cine .dp-ch--lux .dp-ch__title {
+  bottom: auto;
+  top: 96px;
+}
+.dp-cine .dp-ch--lux .dp-ch__facts {
+  right: auto;
+  left: var(--dp-gutter);
+}
+.dp-cine .dp-ch--lux .dp-ch__layer--facade {
+  inset: 13vh var(--dp-gutter) 9vh auto;
+  width: min(32vw, 520px);
+  z-index: 2;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.45);
+}
+.dp-cine .dp-ch--lux .dp-ch__layer--facade .dp-ch__cap {
+  top: auto;
+  bottom: 18px;
+  left: 18px;
+  right: auto;
+}
+
+/* 03 · La Baie d'Alger: the outline of the opening door */
+.dp-cine .dp-ch__aperture {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+
+/* 04 · Colina del Viento: the ground line the building rises from */
+.dp-cine .dp-ch__ground {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.6);
+  transform-origin: left;
+}
+
+/* ---------- Footer finale: scroll-driven in the cinematic layer ---------- */
+
+.dp-finale__glow {
+  opacity: 0.35;
+}
+.dp-finale__skyline rect {
+  fill: #1f1f1f;
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 1;
+}
+.dp-finale__skyline line {
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 1;
+}
+.dp-cine [data-reveal='finale'] .dp-finale__towers,
+.dp-cine [data-reveal='finale'].is-in .dp-finale__towers {
+  transform: none;
+  transition: none;
+}
+.dp-cine [data-reveal='finale'] .dp-finale__roof,
+.dp-cine [data-reveal='finale'] .dp-finale__construct {
+  transition: none;
+}
+.dp-cine [data-reveal='finale'].is-in .dp-finale__lit {
+  animation: none;
+}
