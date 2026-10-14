@@ -7,6 +7,7 @@ import { SiteDetailPage } from './components/SiteDetailPage';
 import { ActivitiesPage } from './components/ActivitiesPage';
 import { ContactPage } from './components/ContactPage';
 import { useParallax, useReveal } from './components/site/primitives';
+import { requestRefresh } from './components/site/cinema';
 import { residences } from './data/site';
 
 /*
@@ -79,6 +80,8 @@ function App() {
   const pageKey = `${currentPage}:${selectedSiteId}`;
   useReveal(pageKey);
   useParallax(pageKey);
+  // Scroll scenes measure the page: re-measure whenever its content changes.
+  useEffect(requestRefresh, [pageKey]);
 
   const renderPage = () => {
     switch (currentPage) {

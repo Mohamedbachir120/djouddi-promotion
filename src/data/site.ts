@@ -110,7 +110,7 @@ export const amenities = [
     icon: CookingPot,
     name: 'Cuisine équipée',
     description: 'Des cuisines entièrement équipées livrées avec chaque appartement.',
-    image: '/images/appartement-temoin/dsc04925-kitchen.jpg',
+    image: '/images/appartement-temoin/dsc04930-bedroom.jpg',
   },
   {
     id: 'gestion',
@@ -161,10 +161,10 @@ export interface Residence {
 export const showApartment: GalleryImage[] = [
   { src: '/images/appartement-temoin/dsc04913-living-dining.jpg', caption: 'Séjour et salle à manger' },
   { src: '/images/appartement-temoin/dsc04920-living-sofa.jpg', caption: 'Salon' },
-  { src: '/images/appartement-temoin/dsc04925-kitchen.jpg', caption: 'Cuisine équipée' },
-  { src: '/images/appartement-temoin/dsc04930-bedroom.jpg', caption: 'Chambre parentale' },
+  { src: '/images/appartement-temoin/dsc04925-kitchen.jpg', caption: 'Salle à manger' },
+  { src: '/images/appartement-temoin/dsc04930-bedroom.jpg', caption: 'Cuisine équipée' },
   { src: '/images/appartement-temoin/dsc04940-bathroom.jpg', caption: 'Salle de bain avec douche italienne' },
-  { src: '/images/appartement-temoin/dsc04950-balcony-view.jpg', caption: 'Balcon' },
+  { src: '/images/appartement-temoin/dsc04950-balcony-view.jpg', caption: 'Chambre parentale' },
   { src: '/images/appartement-temoin/dsc04955-living-closeup.jpg', caption: 'Coin salon' },
 ];
 

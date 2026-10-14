@@ -10,7 +10,9 @@ import {
   whyText,
 } from '../data/site';
 import { ContactLines } from './ContactPage';
-import { ResidenceRow } from './site/ResidenceRow';
+import { Chapters } from './site/Chapters';
+import { gsap, useScene } from './site/cinema';
+import { useRef } from 'react';
 import { Arrow, Gallery, Img, Media, delay, telHref } from './site/primitives';
 
 interface HomePageProps {
@@ -37,72 +39,114 @@ const features = [
   },
 ];
 
+/** Splits a word into letters for the title entrance; screen readers get the h1's label. */
+const letters = (word: string, start: number) =>
+  Array.from(word).map((ch, i) => (
+    <span key={i} className="dp-ltr" style={delay(start + i * 0.045)}>
+      {ch}
+    </span>
+  ));
+
+/*
+ * Opening scene: the Lux drone film behind letterboxing that opens on load.
+ * On scroll the camera keeps pushing in while the title and the actions drift
+ * away at different speeds and the frame fades to black into the next scene.
+ */
+function Hero({ onNavigate }: HomePageProps) {
+  const ref = useRef<HTMLElement>(null);
+
+  useScene(ref, (el) => {
+    const q = gsap.utils.selector(el);
+    gsap
+      .timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: 0.6 } })
+      .to(q('.dp-hero__media'), { scale: 1.2, yPercent: 10 }, 0)
+      .to(q('.dp-hero__title'), { yPercent: -45, autoAlpha: 0 }, 0)
+      .to(q('.dp-hero__lead'), { yPercent: -25, autoAlpha: 0 }, 0)
+      .to(q('.dp-hero__row'), { yPercent: -60, autoAlpha: 0 }, 0)
+      .to(q('.dp-hero__index'), { y: -40, autoAlpha: 0 }, 0)
+      .to(q('.dp-hero__scene'), { autoAlpha: 0 }, 0)
+      .to(q('.dp-hero__fade'), { opacity: 1 }, 0.2);
+  });
+
+  return (
+    <section className="dp-hero" aria-labelledby="hero-title" ref={ref}>
+      <div className="dp-hero__media">
+        <video
+          src={media.heroVideo}
+          poster={media.heroPoster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+        />
+      </div>
+      <div className="dp-hero__shade" />
+      <div className="dp-hero__fade" aria-hidden="true" />
+      <div className="dp-hero__bars" aria-hidden="true">
+        <i />
+        <i />
+      </div>
+
+      <div className="dp-container dp-hero__content">
+        <span className="dp-eyebrow dp-rise dp-hero__lead" style={delay(0.9)}>
+          Promotion immobilière haut standing · Alger
+        </span>
+        <h1 id="hero-title" className="dp-display dp-hero__title" aria-label="Djoudi Promotion">
+          <span className="dp-hero__word" aria-hidden="true">
+            {letters('Djoudi', 1)}
+          </span>
+          <span className="dp-hero__word" aria-hidden="true">
+            {letters('Promotion', 1.2)}
+          </span>
+        </h1>
+        <div className="dp-hero__row">
+          <p className="dp-hero__tagline dp-rise" style={delay(1.7)}>
+            Appartements haut standing. Durabilité, confort et standing inégalés.
+            <em>Une expérience de Vie Luxueuse</em>
+          </p>
+          <div className="dp-hero__ctas dp-rise" style={delay(1.85)}>
+            <button type="button" className="dp-btn dp-btn--primary" onClick={() => onNavigate('sites')}>
+              Découvrir nos résidences
+              <Arrow />
+            </button>
+            <button type="button" className="dp-btn dp-btn--light" onClick={() => onNavigate('contact')}>
+              Planifier une visite
+            </button>
+          </div>
+        </div>
+        <span className="dp-hero__scroll dp-rise" style={delay(2.1)} aria-hidden="true">
+          <i />
+          Nos résidences
+        </span>
+      </div>
+
+      <p className="dp-hero__scene dp-rise" style={delay(2)} aria-hidden="true">
+        <span className="dp-num">Scène 01</span> Résidence Lux 1 &amp; 2, Chéraga · vue drone
+      </p>
+
+      <nav className="dp-hero__index dp-rise" style={delay(2)} aria-label="Nos résidences">
+        <ol className="dp-container">
+          {residences.map((site, i) => (
+            <li key={site.id}>
+              <button type="button" onClick={() => onNavigate('site-detail', site.id)}>
+                <span className="dp-num">{String(i + 1).padStart(2, '0')}</span>
+                <strong>{site.name.replace('Résidence ', '')}</strong>
+                <span className="dp-hero__loc">{site.location}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </section>
+  );
+}
+
 export function HomePage({ onNavigate }: HomePageProps) {
   return (
     <div>
-      {/* Hero */}
-      <section className="dp-hero" aria-labelledby="hero-title">
-        <div className="dp-hero__media">
-          <video
-            src={media.heroVideo}
-            poster={media.heroPoster}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-          />
-        </div>
-        <div className="dp-hero__shade" />
-
-        <div className="dp-container dp-hero__content">
-          <span className="dp-eyebrow dp-rise" style={delay(0.2)}>
-            Promotion immobilière haut standing · Alger
-          </span>
-          <h1 id="hero-title" className="dp-display dp-hero__title">
-            <span className="dp-mask">
-              <span style={delay(0.3)}>Djoudi</span>
-            </span>
-            <span className="dp-mask">
-              <span style={delay(0.42)}>Promotion</span>
-            </span>
-          </h1>
-          <div className="dp-hero__row">
-            <p className="dp-hero__tagline dp-rise" style={delay(0.7)}>
-              Appartements haut standing. Durabilité, confort et standing inégalés.
-              <em>Une expérience de Vie Luxueuse</em>
-            </p>
-            <div className="dp-hero__ctas dp-rise" style={delay(0.85)}>
-              <button type="button" className="dp-btn dp-btn--primary" onClick={() => onNavigate('sites')}>
-                Découvrir nos résidences
-                <Arrow />
-              </button>
-              <button type="button" className="dp-btn dp-btn--light" onClick={() => onNavigate('contact')}>
-                Planifier une visite
-              </button>
-            </div>
-          </div>
-          <span className="dp-hero__scroll dp-rise" style={delay(1.1)} aria-hidden="true">
-            <i />
-            Nos résidences
-          </span>
-        </div>
-
-        <nav className="dp-hero__index dp-rise" style={delay(1)} aria-label="Nos résidences">
-          <ol className="dp-container">
-            {residences.map((site, i) => (
-              <li key={site.id}>
-                <button type="button" onClick={() => onNavigate('site-detail', site.id)}>
-                  <span className="dp-num">{String(i + 1).padStart(2, '0')}</span>
-                  <strong>{site.name.replace('Résidence ', '')}</strong>
-                  <span className="dp-hero__loc">{site.location}</span>
-                </button>
-              </li>
-            ))}
-          </ol>
-        </nav>
-      </section>
+      <Hero onNavigate={onNavigate} />
 
       {/* Qui sommes-nous */}
       <section className="dp-section" aria-labelledby="about-title">
@@ -143,37 +187,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* Nos Projets */}
-      <section className="dp-section dp-section--stone" aria-labelledby="projects-title" style={{ paddingTop: 'clamp(88px, 10vw, 144px)' }}>
-        <div className="dp-container">
-          <div className="dp-head dp-head--split">
-            <div>
-              <span className="dp-eyebrow" data-reveal>
-                Nos Projets
-              </span>
-              <h2 id="projects-title" className="dp-h1 dp-head__title" data-reveal style={delay(0.08)}>
-                Quatre résidences haut standing à Alger
-              </h2>
-            </div>
-            <p className="dp-body" data-reveal style={delay(0.16)}>
-              Découvrez nos résidences haut standing à Dely Brahim, Chéraga, Beb Ezzouar et Draria.
-            </p>
-          </div>
-
-          <div className="dp-residences">
-            {residences.map((site, index) => (
-              <ResidenceRow key={site.id} site={site} index={index} onNavigate={onNavigate} />
-            ))}
-          </div>
-
-          <div className="dp-mt-l" style={{ marginTop: 'clamp(72px, 9vw, 128px)', textAlign: 'center' }} data-reveal>
-            <button type="button" className="dp-btn dp-btn--dark" onClick={() => onNavigate('sites')}>
-              Voir toutes nos résidences
-              <Arrow />
-            </button>
-          </div>
-        </div>
-      </section>
+      {/* Nos Projets: four film chapters */}
+      <Chapters onNavigate={onNavigate} />
 
       {/* Pourquoi Djoudi Promotion */}
       <section className="dp-section" aria-labelledby="why-title">

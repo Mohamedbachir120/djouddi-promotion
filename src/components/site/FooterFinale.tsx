@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { gsap, useScene } from './cinema';
 
 /*
  * The footer's closing image: the logo's two red roofs drawn at monumental
@@ -6,12 +7,30 @@ import { useEffect, useRef } from 'react';
  * included, standing on a ground line. On scroll-in the towers rise out of the
  * ground and the roofs are drawn; on desktop the two layers shift slightly
  * with the pointer for depth. Purely decorative, so hidden from assistive tech.
+ *
+ * In the cinematic layer this is the film's last scene and it follows the
+ * scroll instead: the skyline and the towers rise at different speeds, the
+ * roofs are drawn, the sky warms and the windows switch on one by one.
  */
 
 const W = 1440;
 const H = 640;
 const GROUND = 580;
 const CAP_TOP = 282;
+
+// Background skyline: plain slabs with floor lines, a depth layer behind the wordmark.
+const skyline = [
+  { x: 60, w: 120, top: 330 },
+  { x: 200, w: 70, top: 300 },
+  { x: 300, w: 150, top: 352 },
+  { x: 480, w: 90, top: 316 },
+  { x: 600, w: 130, top: 290 },
+  { x: 760, w: 80, top: 338 },
+  { x: 870, w: 140, top: 306 },
+  { x: 1040, w: 100, top: 270 },
+  { x: 1170, w: 120, top: 324 },
+  { x: 1310, w: 90, top: 296 },
+];
 
 // Deterministic "lit window" cells on the facade grid (28 × 24 units).
 const litWindows = (() => {
@@ -57,6 +76,25 @@ export function FooterFinale() {
     };
   }, []);
 
+  useScene(ref, (el) => {
+    const q = gsap.utils.selector(el);
+    const tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom bottom', scrub: 0.8, refreshPriority: -1 },
+    });
+    tl.fromTo(q('.dp-finale__skyline'), { y: 140 }, { y: 0, duration: 1 }, 0)
+      .fromTo(q('.dp-finale__rise'), { y: 330 }, { y: 0, duration: 1, ease: 'power2.out' }, 0)
+      .fromTo(q('.dp-finale__construct'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.2)
+      .fromTo(q('.dp-finale__roof'), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.6, stagger: 0.12, ease: 'power1.inOut' }, 0.35)
+      .fromTo(q('.dp-finale__glow'), { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.4)
+      .fromTo(
+        q('.dp-finale__lit'),
+        { opacity: 0 },
+        { opacity: 0.55, duration: 0.05, stagger: { each: 0.5 / litWindows.length, from: 'random' } },
+        0.5,
+      );
+  });
+
   return (
     <div className="dp-finale" ref={ref} data-reveal="finale" aria-hidden="true">
       <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMax meet" focusable="false">
@@ -77,10 +115,18 @@ export function FooterFinale() {
               DJOUDI
             </text>
           </clipPath>
+          <radialGradient id="dp-dusk" cx="50%" cy="100%" r="70%">
+            <stop offset="0" stopColor="#f04230" stopOpacity="0.16" />
+            <stop offset="0.45" stopColor="#f3e2c4" stopOpacity="0.05" />
+            <stop offset="1" stopColor="#1a1a1a" stopOpacity="0" />
+          </radialGradient>
           <clipPath id="dp-above-ground">
             <rect x="0" y="0" width={W} height={GROUND} />
           </clipPath>
         </defs>
+
+        {/* Dusk light low on the horizon */}
+        <rect x="0" y="0" width={W} height={GROUND} fill="url(#dp-dusk)" className="dp-finale__glow" />
 
         {/* Ground plane */}
         <rect x="0" y={GROUND} width={W} height={H - GROUND} fill="#141414" />
@@ -107,8 +153,19 @@ export function FooterFinale() {
           />
         </g>
 
-        {/* Wordmark towers rising from the ground */}
+        {/* Wordmark towers rising from the ground, in front of a quiet skyline */}
         <g clipPath="url(#dp-above-ground)">
+          <g className="dp-finale__skyline">
+            {skyline.map((b) => (
+              <g key={b.x}>
+                <rect x={b.x} y={b.top} width={b.w} height={GROUND - b.top} />
+                {Array.from({ length: Math.floor((GROUND - b.top) / 24) }, (_, i) => (
+                  <line key={i} x1={b.x} x2={b.x + b.w} y1={b.top + 24 * (i + 1)} y2={b.top + 24 * (i + 1)} />
+                ))}
+              </g>
+            ))}
+          </g>
+          <g className="dp-finale__rise">
           <g className="dp-finale__par">
           <g className="dp-finale__towers">
             <g clipPath="url(#dp-wordmark)">
@@ -134,6 +191,7 @@ export function FooterFinale() {
             >
               DJOUDI
             </text>
+          </g>
           </g>
           </g>
         </g>
