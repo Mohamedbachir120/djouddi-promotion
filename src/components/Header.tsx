@@ -29,8 +29,12 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
       ticking = false;
       const y = window.scrollY;
       setSolid(y > 24);
-      setHidden(y > 480 && y > lastY.current + 4);
-      if (Math.abs(y - lastY.current) > 4) lastY.current = y;
+      // Only change direction after a clear move (12px); small steps keep the
+      // current state, so slow or smooth scrolling never toggles it back and forth.
+      const delta = y - lastY.current;
+      if (y <= 480) setHidden(false);
+      else if (Math.abs(delta) > 12) setHidden(delta > 0);
+      if (Math.abs(delta) > 12 || y <= 480) lastY.current = y;
     };
     const onScroll = () => {
       if (!ticking) {
